@@ -1,10 +1,10 @@
 <script setup>
 import {computed, ref} from 'vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import Modal from '@/Components/Modal.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import DangerButton from '@/components/DangerButton.vue';
+import SecondaryButton from '@/components/SecondaryButton.vue';
+import Modal from '@/components/Modal.vue';
 
 const props = defineProps({
     events: Array,
