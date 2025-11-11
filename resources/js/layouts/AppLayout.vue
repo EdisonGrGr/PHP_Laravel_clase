@@ -51,20 +51,14 @@ const logout = () => {
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
-
-
-                                   <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                               
                                 <NavLink :href="route('venues.index')" :active="route().current('venues.index')">
                                     Venues
                                 </NavLink>
-                            </div>
 
-
-                                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                              <NavLink :href="route('events.index')" :active="route().current('events.index')">
-                                Events
+                                <NavLink :href="route('events.index')" :active="route().current('events.index')">
+                                    Events
                                 </NavLink>
-                            </div>
                             </div>
                         </div>
 
@@ -208,18 +202,11 @@ const logout = () => {
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
-                    </div>
 
-                        <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('venues.index')" :active="route().current('venues.index')">
-                            Venues
+                        <ResponsiveNavLink :href="route('events.index')" :active="route().current('events.index')">
+                          Events
                         </ResponsiveNavLink>
-                    </div>
 
-                           <div class="pt-2 pb-3 space-y-1">
-                      <ResponsiveNavLink :href="route('events.index')" :active="route().current('events.index')">
-    Events
-</ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->

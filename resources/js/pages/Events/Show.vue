@@ -32,16 +32,6 @@ function formatDate(dateString) {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6">
-                        <!-- Event Image -->
-                        <div v-if="event.event_image" class="mb-6">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Event Image</h3>
-                            <img 
-                                :src="`/storage/${event.event_image}`" 
-                                :alt="event.event_name" 
-                                class="w-full max-w-2xl h-96 object-cover rounded-lg shadow-lg"
-                            />
-                        </div>
-
                         <div class="mb-6">
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Event Information</h3>
 
@@ -74,6 +64,16 @@ function formatDate(dateString) {
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Venue</p>
                                     <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ event.venue ? event.venue.venue_name : 'No venue assigned' }}</p>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Event Image</p>
+                                    <div class="mt-2">
+                                        <img v-if="event.event_image" :src="`/storage/${event.event_image}`" 
+                                             :alt="event.event_name" 
+                                             class="max-w-xs rounded-lg shadow-md">
+                                        <p v-else class="mt-1 text-sm text-gray-900 dark:text-white">No image available</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

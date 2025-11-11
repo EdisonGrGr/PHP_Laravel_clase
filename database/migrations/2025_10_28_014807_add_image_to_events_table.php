@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->string('event_image')->nullable()->after('event_is_virtual');
-        });
+        // Only add the column if it doesn't already exist to avoid duplicate column errors
+        if (! Schema::hasColumn('events', 'event_image')) {
+            Schema::table('events', function (Blueprint $table) {
+                $table->string('event_image')->nullable();
+            });
+        }
     }
 
     /**

@@ -1,11 +1,11 @@
 <script setup>
-import {Head, Link, useForm, router} from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 const props = defineProps({
     event: Object,
@@ -19,25 +19,25 @@ const form = useForm({
     event_speaker_name: props.event.event_speaker_name,
     fk_venue_event: props.event.fk_venue_event,
     event_image: null,
-    _method: 'PUT',
+    _method: 'PUT'
 });
 
-const imagePreview = ref(props.event.event_image ? `/storage/${props.event.event_image}` : null);
-
-const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        form.event_image = file;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imagePreview.value = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-};
-
 const submit = () => {
-    router.post(route('events.update', props.event.id), form);
+    if (form.processing) return;
+
+    form.transform((data) => ({
+        ...data,
+        _method: 'PUT',
+    })).post(route('events.update', props.event.id), {
+        forceFormData: true,
+        preserveScroll: true,
+        onError: (errors) => {
+            console.error('Form submission errors:', errors);
+        },
+        onSuccess: () => {
+            console.log('Form submitted successfully');
+        }
+    });
 };
 
 onMounted(() => {
@@ -68,7 +68,7 @@ onMounted(() => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6">
-                        <form @submit.prevent="submit">
+                        <form @submit.prevent="submit" enctype="multipart/form-data">
                             <div class="mb-4">
                                 <InputLabel for="event_name" value="Event Name" class="dark:text-gray-300"/>
                                 <TextInput
@@ -134,32 +134,18 @@ onMounted(() => {
 
                             <div class="mb-4">
                                 <InputLabel for="event_image" value="Event Image" class="dark:text-gray-300"/>
-                                
-                                <!-- Imagen actual -->
-                                <div v-if="event.event_image && !form.event_image" class="mb-3">
-                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Current Image:</p>
-                                    <img :src="`/storage/${event.event_image}`" alt="Current event image" class="max-w-xs h-48 object-cover rounded-lg shadow-md"/>
+                                <div v-if="props.event.event_image" class="mb-2">
+                                    <img :src="'/storage/' + props.event.event_image" alt="Current Event Image" class="w-32 h-32 object-cover rounded-md border">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Current image</p>
                                 </div>
-                                
                                 <input
                                     id="event_image"
                                     type="file"
                                     accept="image/*"
-                                    class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400
-                                           file:mr-4 file:py-2 file:px-4
-                                           file:rounded-md file:border-0
-                                           file:text-sm file:font-semibold
-                                           file:bg-indigo-50 dark:file:bg-indigo-900 file:text-indigo-700 dark:file:text-indigo-300
-                                           hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800"
-                                    @change="handleImageChange"
+                                    @input="form.event_image = $event.target.files[0]"
+                                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 />
                                 <InputError class="mt-2" :message="form.errors.event_image"/>
-                                
-                                <!-- Vista previa de la nueva imagen -->
-                                <div v-if="form.event_image && imagePreview" class="mt-4">
-                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">New Image Preview:</p>
-                                    <img :src="imagePreview" alt="Preview" class="max-w-xs h-48 object-cover rounded-lg shadow-md"/>
-                                </div>
                             </div>
 
                             <div class="flex items-center justify-end mt-4">

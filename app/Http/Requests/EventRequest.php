@@ -29,6 +29,7 @@ class EventRequest extends FormRequest
             'event_location_name' => ['string', 'max:255'],
             'event_meetup_url' => ['url'],
             'event_is_virtual' => ['boolean'],
+            'event_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
     }
 }

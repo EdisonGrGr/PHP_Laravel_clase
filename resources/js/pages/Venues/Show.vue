@@ -12,16 +12,13 @@ const props = defineProps({
 
     <AppLayout>
         <template #header>
-            <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Venue Details
-                </h2>
-                <Link :href="route('venues.index')"
-                      class="px-4 py-2 bg-gray-800 dark:bg-gray-700 text-white rounded-md hover:bg-gray-700 dark:hover:bg-gray-600">
-                    Back to Venues
-                </Link>
-            </div>
-        </template>
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Venues</h2>
+        <Link :href="route('venues.create')" class="px-4 py-2 bg-gray-800 dark:bg-gray-700 text-white rounded-md hover:bg-gray-700 dark:hover:bg-gray-600">
+            Create Venue
+        </Link>
+    </div>
+</template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

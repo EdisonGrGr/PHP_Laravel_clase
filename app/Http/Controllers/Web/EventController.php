@@ -30,6 +30,8 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+        \Log::info('Request data:', $request->all());
+        
         $validated = $request->validate([
             'event_name' => 'required|string|max:255',
             'event_date' => 'required|date',
@@ -39,13 +41,13 @@ class EventController extends Controller
             'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Manejar la carga de la imagen
+        $data = $validated;
+
         if ($request->hasFile('event_image')) {
-            $imagePath = $request->file('event_image')->store('events', 'public');
-            $validated['event_image'] = $imagePath;
+            $data['event_image'] = $request->file('event_image')->store('events', 'public');
         }
 
-        Event::create($validated);
+        Event::create($data);
 
         return redirect()->route('events.index')
             ->with('message', 'Event created successfully.');
@@ -68,6 +70,9 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
+        \Log::info('Update request data:', $request->all());
+        \Log::info('Files:', $request->allFiles());
+        
         $validated = $request->validate([
             'event_name' => 'required|string|max:255',
             'event_date' => 'required|date',
@@ -77,18 +82,21 @@ class EventController extends Controller
             'event_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Manejar la actualización de la imagen
+        $data = collect($validated)->except(['_method'])->all();
+
+        // Handle image upload
         if ($request->hasFile('event_image')) {
-            // Eliminar la imagen anterior si existe
+            // Delete old image if exists
             if ($event->event_image) {
-                Storage::disk('public')->delete($event->event_image);
+                \Storage::disk('public')->delete($event->event_image);
             }
-            
-            $imagePath = $request->file('event_image')->store('events', 'public');
-            $validated['event_image'] = $imagePath;
+            $data['event_image'] = $request->file('event_image')->store('events', 'public');
+        } else {
+            // Keep existing image if no new one is uploaded
+            unset($data['event_image']);
         }
 
-        $event->update($validated);
+        $event->update($data);
 
         return redirect()->route('events.index')
             ->with('message', 'Event updated successfully.');
@@ -96,11 +104,11 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
-        // Eliminar la imagen si existe
+        // Delete image file from storage if exists
         if ($event->event_image) {
             Storage::disk('public')->delete($event->event_image);
         }
-        
+
         $event->delete();
 
         return redirect()->route('events.index')

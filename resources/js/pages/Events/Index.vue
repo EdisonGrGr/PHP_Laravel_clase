@@ -141,13 +141,8 @@ const deleteEvent = () => {
                                         {{ event.id }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <img 
-                                            v-if="event.event_image" 
-                                            :src="`/storage/${event.event_image}`" 
-                                            :alt="event.event_name"
-                                            class="h-16 w-16 object-cover rounded-lg"
-                                        />
-                                        <span v-else class="text-xs text-gray-400 dark:text-gray-500">No image</span>
+                                        <img v-if="event.event_image" :src="'/storage/' + event.event_image" alt="Event Image" class="w-16 h-16 object-cover rounded-md border">
+                                        <span v-else class="text-gray-400 text-sm">No image</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                         {{ event.event_name }}

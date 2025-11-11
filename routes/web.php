@@ -6,7 +6,6 @@ use Inertia\Inertia;
 use App\Http\Controllers\Web\VenueController;
 use App\Http\Controllers\Web\EventController;
 
-
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -24,6 +23,8 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::resource('venues', VenueController::class);
+    Route::resource('venues',VenueController::class );
     Route::resource('events', EventController::class);
-});
+
+}); 
+

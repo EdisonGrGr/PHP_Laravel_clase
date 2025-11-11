@@ -14,3 +14,5 @@ php artisan migrate --seed
 
 # Iniciar el servidor de desarrollo
 php artisan serve # o composer run dev
+
+#cambio de prueba despliegue 

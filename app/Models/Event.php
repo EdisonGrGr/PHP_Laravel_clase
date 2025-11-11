@@ -22,6 +22,14 @@ class Event extends Model
         'event_image',
     ];
 
+    /**
+     * Get the event image URL
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->event_image ? '/storage/' . $this->event_image : null;
+    }
+
     public function venue(): BelongsTo
     {
         return $this->belongsTo(
