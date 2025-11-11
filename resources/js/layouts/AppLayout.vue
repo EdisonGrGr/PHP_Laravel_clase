@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import ApplicationMark from '@/components/ApplicationMark.vue';
-import Banner from '@/components/Banner.vue';
-import Dropdown from '@/components/Dropdown.vue';
-import DropdownLink from '@/components/DropdownLink.vue';
-import NavLink from '@/components/NavLink.vue';
-import ResponsiveNavLink from '@/components/ResponsiveNavLink.vue';
+import ApplicationMark from '@/Components/ApplicationMark.vue';
+import Banner from '@/Components/Banner.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
 defineProps({
     title: String,
@@ -51,12 +51,20 @@ const logout = () => {
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
+
+
+                                   <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('venues.index')" :active="route().current('venues.index')">
                                     Venues
                                 </NavLink>
-                                <NavLink :href="route('events.index')" :active="route().current('events.index')">
-    Events
-</NavLink>
+                            </div>
+
+
+                                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                              <NavLink :href="route('events.index')" :active="route().current('events.index')">
+                                Events
+                                </NavLink>
+                            </div>
                             </div>
                         </div>
 
@@ -200,10 +208,16 @@ const logout = () => {
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+                    </div>
+
+                        <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('venues.index')" :active="route().current('venues.index')">
                             Venues
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('events.index')" :active="route().current('events.index')">
+                    </div>
+
+                           <div class="pt-2 pb-3 space-y-1">
+                      <ResponsiveNavLink :href="route('events.index')" :active="route().current('events.index')">
     Events
 </ResponsiveNavLink>
                     </div>
@@ -215,7 +229,7 @@ const logout = () => {
                                 <img class="size-10 rounded-full object-cover" :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name">
                             </div>
 
-                            <div v-if="$page.props.auth.user">
+                            <div>
                                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">
                                     {{ $page.props.auth.user.name }}
                                 </div>

@@ -1,6 +1,6 @@
 <script setup>
-import AppLayout from '@/layouts/AppLayout.vue';
-import Welcome from '@/components/Welcome.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import Welcome from '@/Components/Welcome.vue';
 </script>
 
 <template>
@@ -14,7 +14,8 @@ import Welcome from '@/components/Welcome.vue';
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
+                    <h2>HOLA</h2>
+                    
                 </div>
             </div>
         </div>

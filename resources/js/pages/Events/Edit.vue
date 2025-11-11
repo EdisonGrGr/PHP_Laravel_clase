@@ -1,11 +1,11 @@
 <script setup>
-import {Head, Link, useForm} from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
-import InputError from '@/components/InputError.vue';
-import InputLabel from '@/components/InputLabel.vue';
-import PrimaryButton from '@/components/PrimaryButton.vue';
-import TextInput from '@/components/TextInput.vue';
-import { onMounted } from 'vue';
+import {Head, Link, useForm, router} from '@inertiajs/vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps({
     event: Object,
@@ -18,10 +18,26 @@ const form = useForm({
     event_is_virtual: props.event.event_is_virtual,
     event_speaker_name: props.event.event_speaker_name,
     fk_venue_event: props.event.fk_venue_event,
+    event_image: null,
+    _method: 'PUT',
 });
 
+const imagePreview = ref(props.event.event_image ? `/storage/${props.event.event_image}` : null);
+
+const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        form.event_image = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
 const submit = () => {
-    form.put(route('events.update', props.event.id));
+    router.post(route('events.update', props.event.id), form);
 };
 
 onMounted(() => {
@@ -114,6 +130,36 @@ onMounted(() => {
                                     </option>
                                 </select>
                                 <InputError class="mt-2" :message="form.errors.fk_venue_event"/>
+                            </div>
+
+                            <div class="mb-4">
+                                <InputLabel for="event_image" value="Event Image" class="dark:text-gray-300"/>
+                                
+                                <!-- Imagen actual -->
+                                <div v-if="event.event_image && !form.event_image" class="mb-3">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Current Image:</p>
+                                    <img :src="`/storage/${event.event_image}`" alt="Current event image" class="max-w-xs h-48 object-cover rounded-lg shadow-md"/>
+                                </div>
+                                
+                                <input
+                                    id="event_image"
+                                    type="file"
+                                    accept="image/*"
+                                    class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400
+                                           file:mr-4 file:py-2 file:px-4
+                                           file:rounded-md file:border-0
+                                           file:text-sm file:font-semibold
+                                           file:bg-indigo-50 dark:file:bg-indigo-900 file:text-indigo-700 dark:file:text-indigo-300
+                                           hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800"
+                                    @change="handleImageChange"
+                                />
+                                <InputError class="mt-2" :message="form.errors.event_image"/>
+                                
+                                <!-- Vista previa de la nueva imagen -->
+                                <div v-if="form.event_image && imagePreview" class="mt-4">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">New Image Preview:</p>
+                                    <img :src="imagePreview" alt="Preview" class="max-w-xs h-48 object-cover rounded-lg shadow-md"/>
+                                </div>
                             </div>
 
                             <div class="flex items-center justify-end mt-4">

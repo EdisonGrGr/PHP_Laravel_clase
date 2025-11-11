@@ -1,10 +1,10 @@
 <script setup>
 import {computed, ref} from 'vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
-import DangerButton from '@/components/DangerButton.vue';
-import SecondaryButton from '@/components/SecondaryButton.vue';
-import Modal from '@/components/Modal.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import Modal from '@/Components/Modal.vue';
 
 const props = defineProps({
     events: Array,
@@ -107,6 +107,10 @@ const deleteEvent = () => {
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Image
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Event Name
                                     </th>
                                     <th scope="col"
@@ -135,6 +139,15 @@ const deleteEvent = () => {
                                 <tr v-for="event in filteredEvents" :key="event.id">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         {{ event.id }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <img 
+                                            v-if="event.event_image" 
+                                            :src="`/storage/${event.event_image}`" 
+                                            :alt="event.event_name"
+                                            class="h-16 w-16 object-cover rounded-lg"
+                                        />
+                                        <span v-else class="text-xs text-gray-400 dark:text-gray-500">No image</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                         {{ event.event_name }}

@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Web\VenueController;
 use App\Http\Controllers\Web\EventController;
 
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -23,10 +24,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    
-    // Rutas de venues protegidas
     Route::resource('venues', VenueController::class);
     Route::resource('events', EventController::class);
 });
-
-require __DIR__.'/auth.php';

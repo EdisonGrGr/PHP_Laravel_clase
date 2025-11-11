@@ -1,16 +1,36 @@
 <script setup>
-import {Head, Link, router} from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
-
-defineProps({
+import {ref} from 'vue';
+import {Head, Link, useForm} from '@inertiajs/vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import Modal from '@/Components/Modal.vue';
+const props = defineProps({
     venues: Array,
-    message: String,
+        message: String,
+
 });
 
+const showDeleteModal = ref(false);
+const venueToDelete = ref(null);
+
 const confirmDelete = (venue) => {
-    if (confirm(`¿Estás seguro de que quieres eliminar el venue "${venue.venue_name}"?`)) {
-        router.delete(route('venues.destroy', venue.id));
-    }
+    venueToDelete.value = venue;
+    showDeleteModal.value = true;
+};
+
+const closeModal = () => {
+    showDeleteModal.value = false;
+};
+
+const deleteForm = useForm({});
+
+const deleteVenue = () => {
+    deleteForm.delete(route('venues.destroy', venueToDelete.value.id), {
+        onSuccess: () => {
+            showDeleteModal.value = false;
+        },
+    });
 };
 </script>
 
@@ -19,30 +39,25 @@ const confirmDelete = (venue) => {
 
     <AppLayout>
         <template #header>
-    <div class="flex justify-between items-center">
+             <div class="flex justify-between items-center">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Venues</h2>
         <Link :href="route('venues.create')" class="px-4 py-2 bg-gray-800 dark:bg-gray-700 text-white rounded-md hover:bg-gray-700 dark:hover:bg-gray-600">
             Create Venue
         </Link>
     </div>
-</template>
+        </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                
-                <!-- Flash Message -->
-                <div v-if="message" class="mb-4 bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ message }}</span>
-                </div>
-                
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6">
-                        <div v-if="venues.length === 0" class="text-center py-4 text-gray-600 dark:text-gray-400">
-        No hay venues disponibles.
-    </div>
-    <div v-else class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead class="bg-gray-50 dark:bg-gray-700">
+                        <div v-if="venues.length === 0" class="text-center py-8 text-gray-600 dark:text-gray-400">
+                            <p class="text-lg">No venues available.</p>
+                            <p class="text-sm mt-2">Create your first venue to get started.</p>
+                        </div>
+                        <div v-else class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
         <tr>
             <th scope="col"
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -60,12 +75,11 @@ const confirmDelete = (venue) => {
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 Maximum Capacity
             </th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-    Actions
-</th>
+            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                Actions 
+            </th>
         </tr>
         </thead>
-        
         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
         <tr v-for="venue in venues" :key="venue.id">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -81,28 +95,72 @@ const confirmDelete = (venue) => {
                 {{ venue.venue_max_capacity }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-    <Link :href="route('venues.show', venue.id)"
-          class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 mr-3">
-        View
-    </Link> 
-     
-    <Link :href="route('venues.edit', venue.id)"
-      class="text-blue-600 hover:text-blue-900 mr-3">
-    Edit
-</Link>
-<button @click="confirmDelete(venue)"
-        class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300">
-    Eliminar
-</button>
-</td>
+                <div class="flex items-center justify-center gap-3">
+                    <Link :href="route('venues.show', venue.id)"
+                          class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 transition-colors">
+                        View
+                    </Link>
+                    <Link :href="route('venues.edit', venue.id)"
+                          class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 transition-colors">
+                        Edit
+                    </Link>
+                    <button @click="confirmDelete(venue)"
+                            class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors">
+                        Delete
+                    </button>
+                </div>
+            </td>
         </tr>
-        </tbody>
-    </table>
-</div>
-                    </div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
                 </div>
             </div>
         </div>
-        
+
+
+
+        <!-- Modal de confirmación de eliminación -->
+    <Modal :show="showDeleteModal" @close="closeModal">
+        <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                Are you sure you want to delete this venue?
+            </h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                This action cannot be undone.
+            </p>
+            <div class="mt-6 flex justify-end space-x-3">
+                <SecondaryButton @click="closeModal">Cancel</SecondaryButton>
+                <DangerButton :class="{ 'opacity-25': deleteForm.processing }" :disabled="deleteForm.processing"
+                              @click="deleteVenue">
+                    Delete
+                </DangerButton>
+            </div>
+        </div>
+    </Modal>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Asegurar que los botones no se desborden */
+td {
+    max-width: 200px;
+}
+
+/* Mejoras visuales para la tabla */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Hover en las filas */
+tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Espaciado entre los botones de acción */
+.flex.gap-3 > * {
+    white-space: nowrap;
+}
+</style>

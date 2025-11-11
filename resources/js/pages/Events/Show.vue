@@ -1,6 +1,6 @@
 <script setup>
 import {Head, Link} from '@inertiajs/vue3';
-import AppLayout from '@/layouts/AppLayout.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 
 const props = defineProps({
     event: Object,
@@ -32,6 +32,16 @@ function formatDate(dateString) {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6">
+                        <!-- Event Image -->
+                        <div v-if="event.event_image" class="mb-6">
+                            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Event Image</h3>
+                            <img 
+                                :src="`/storage/${event.event_image}`" 
+                                :alt="event.event_name" 
+                                class="w-full max-w-2xl h-96 object-cover rounded-lg shadow-lg"
+                            />
+                        </div>
+
                         <div class="mb-6">
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">Event Information</h3>
 
