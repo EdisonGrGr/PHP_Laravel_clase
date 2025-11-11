@@ -7,7 +7,7 @@ import { type BreadcrumbItem } from '@/types';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { appearance } from '@/routes';
+import { appearance } from '@/routes/index';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
